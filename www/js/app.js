@@ -3,7 +3,7 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-var app = angular.module('starter', ['ionic'])
+var app = angular.module('starter', ['ionic', 'starter.controllers', 'starter.services']);
 
 app.run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -21,9 +21,9 @@ app.run(function($ionicPlatform) {
       StatusBar.styleDefault();
     }
   });
-})
+});
 
-app.controller('twitterController', function($scope){
+app.controller('twitterController', function($scope, $ionicPopup, $timeout){
   $scope.tweets = [
 
     {textTweet : 'Testando essa bosta', date: '08/12/1991', like : false , retweet : ''},
@@ -32,7 +32,7 @@ app.controller('twitterController', function($scope){
 
   ];
 
-  $scope.nome = 'Italo';
+  $scope.nome = {};
 
   $scope.addTwitter = function(){
     var data = new Date().toLocaleString();
@@ -72,49 +72,70 @@ app.controller('twitterController', function($scope){
       return 'false';
     }
   };
-})
-
-  app.controller('PopupCtrl',function($scope, $ionicPopup, $timeout) {
-
-
-    init();
-
-    function init(){
-
-    }
-
-// Triggered on a button click, or some other target
+  
+  
+    // Triggered on a button click, or some other target
     $scope.showPopup = function() {
-      $scope.user = {};
-
+      
       // An elaborate, custom popup
       var myPopup = $ionicPopup.show({
-        template: '<input type="password" ng-model="user.twitter">',
-        title: 'Enter Wi-Fi Password',
-        subTitle: 'Please use normal things',
+        template: '<input type="text" minlenght="3" ng-model="nome.user">',
+        title: 'Entre com o seu Usuário:',
+        subTitle: '',
         scope: $scope,
         buttons: [
-          { text: 'Cancelar' },
+          { text: 'Cancel' },
           {
-            text: '<b>Salvar</b>',
+            text: '<b>Save</b>',
             type: 'button-positive',
             onTap: function(e) {
-              if (!$scope.user.twitter) {
-                //don't allow the user to close unless he enters wifi password
+              if (!$scope.nome.user) {
+                //Não deixa salvar se não tiver preenchido o usuário
                 e.preventDefault();
               } else {
-                return $scope.data.twitter;
+                return $scope.nome.user;
               }
             }
           }
         ]
       });
-
+    
       myPopup.then(function(res) {
         console.log('Tapped!', res);
       });
+    
+     };
 
-    };
+    
+    init();
+    
+    function init(){
+      $scope.showPopup();
+    }
+});
 
-  });
+
+
+
+
+  app.config(function($stateProvider, $urlRouterProvider) {
+
+    // Ionic uses AngularUI Router which uses the concept of states
+    // Learn more here: https://github.com/angular-ui/ui-router
+    // Set up the various states which the app can be in.
+    // Each state's controller can be found in controllers.js
+  
+    // Each tab has its own nav history stack:
+
+    $stateProvider.state('tab.dash', {
+    url: '/dash',
+    views: {
+      'tab-dash': {
+        templateUrl: 'templates/tab-dash.html',
+        controller: 'twitterController'
+      }
+    }
+  })
+
+});
 
