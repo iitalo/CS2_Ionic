@@ -1,0 +1,48 @@
+/* Empty. Add your own CSS if you like */
+
+.ion-social-twitter{
+  font-size: 200%;
+}
+
+h2.user{
+  float: left;
+  font-style: oblique;
+}
+
+p.data{
+  text-align: right;
+
+}
+
+p.botoes{
+  text-align: right;
+  background-color: #0a9dc7;
+
+}
+
+.ion-thumbsup{
+
+}
+
+.ion-trash-a{
+
+}
+
+
+.button-bar{
+  float: right;
+}
+
+.retweet-icon{
+  padding-top: 2px;
+  width: 30px;
+  height: 30px;
+}
+
+.btn-true:hover{
+  color: blue;
+}
+
+.btn-true{
+  color: blue;
+}
