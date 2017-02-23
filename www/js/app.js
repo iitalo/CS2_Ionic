@@ -3,7 +3,7 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-var app = angular.module('starter', ['ionic', 'starter.controllers', 'starter.services']);
+var app = angular.module('starter', ['ionic']);
 
 app.run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -23,21 +23,24 @@ app.run(function($ionicPlatform) {
   });
 });
 
-app.controller('twitterController', function($scope, $ionicPopup, $timeout){
+
+app.controller('twitterController', function($scope, $ionicPopup, $ionicModal, $timeout){
   $scope.tweets = [
-
-    {textTweet : 'Testando essa bosta', date: '08/12/1991', like : false , retweet : ''},
-    {textTweet : 'funcionaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', date: '14/12/1992', like : false , retweet : ''},
-    {textTweet : 'Espero que essa bosta funcione', date: '20/12/2013', like : false , retweet : ''}
-
+    /*
+    { textTweet : 'Testando essa bosta', date: '08/12/1991', like : false , retweet : ''},
+    { textTweet : 'funcionaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', date: '14/12/1992', like : false , retweet : ''},
+    { textTweet : 'Espero que essa bosta funcione', date: '20/12/2013', like : false , retweet : ''}
+    */
   ];
 
   $scope.nome = {};
 
-  $scope.addTwitter = function(){
+  $scope.addTwitter = function(novo){
+    
     var data = new Date().toLocaleString();
-    $scope.tweets.unshift({textTweet : $scope.tweetText, date : data, like: false, retweet : ''});
+    $scope.tweets.unshift({textTweet : novo.tweetText, date : data, like: false, retweet : ''});
     $scope.tweetText = '';
+    $scope.modal.hide();
   };
 
   $scope.removeTwitter = function(id){
@@ -50,10 +53,10 @@ app.controller('twitterController', function($scope, $ionicPopup, $timeout){
 
   $scope.retweetTwitter = function(id){
     var data = new Date().toLocaleString();
-    novo = {textTweet : $scope.tweets[id].textTweet, date : data, like: false, retweet : 'Retweet: '};
+    var novo = {textTweet : $scope.tweets[id].textTweet, date : data, like: false, retweet : 'Retweet: '};
     $scope.tweets.unshift(novo);
   };
-
+/*
   $scope.showName = function(){
     if ($scope.nome.length>0) {
       return ;
@@ -61,9 +64,8 @@ app.controller('twitterController', function($scope, $ionicPopup, $timeout){
       return 'true';
     }
     return alerta;
-
   };
-
+*/
   $scope.btnCurtir = function(id){
 
     if ($scope.tweets[id].like) {
@@ -79,14 +81,18 @@ app.controller('twitterController', function($scope, $ionicPopup, $timeout){
       
       // An elaborate, custom popup
       var myPopup = $ionicPopup.show({
-        template: '<input type="text" minlenght="3" ng-model="nome.user">',
+        template: '<label class="item item-input"><i class="icon ion-at placeholder-icon"></i><input ng-model="nome.user" type="text" minlength="3"></label>',
         title: 'Entre com o seu Usuário:',
-        subTitle: '',
+        subTitle: 'No minimo 3 caracteres...',
         scope: $scope,
         buttons: [
-          { text: 'Cancel' },
+          { text: 'Cancelar', 
+            onTap: function(e){
+              $scope.nome.user = '';
+            }
+          },
           {
-            text: '<b>Save</b>',
+            text: '<b>Twittar</b>',
             type: 'button-positive',
             onTap: function(e) {
               if (!$scope.nome.user) {
@@ -101,41 +107,34 @@ app.controller('twitterController', function($scope, $ionicPopup, $timeout){
       });
     
       myPopup.then(function(res) {
-        console.log('Tapped!', res);
+        //console.log('Tapped!', res);
       });
     
      };
 
-    
-    init();
-    
-    function init(){
-      $scope.showPopup();
-    }
-});
 
-
-
-
-
-  app.config(function($stateProvider, $urlRouterProvider) {
-
-    // Ionic uses AngularUI Router which uses the concept of states
-    // Learn more here: https://github.com/angular-ui/ui-router
-    // Set up the various states which the app can be in.
-    // Each state's controller can be found in controllers.js
-  
-    // Each tab has its own nav history stack:
-
-    $stateProvider.state('tab.dash', {
-    url: '/dash',
-    views: {
-      'tab-dash': {
-        templateUrl: 'templates/tab-dash.html',
-        controller: 'twitterController'
+    $scope.showNovo = function(){
+      if(!$scope.nome.user){
+        $scope.showPopup();
+      }else{
+        $scope.modal.show();
       }
-    }
-  })
+    };
+    
+    
+    $timeout(function() {
+      if(!$scope.nome.user)
+        $scope.showPopup();
+    }, 1);
+    
 
+    $ionicModal.fromTemplateUrl('templates/modal.html', {
+      scope: $scope
+    }).then(function(modal) {
+      $scope.modal = modal;
+    });
+    
 });
+
+
 

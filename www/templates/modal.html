@@ -1,0 +1,15 @@
+<ion-modal-view>
+	<ion-header-bar class="bar bar-header bar-positive">
+		<h2 class="title">Novo Tweet</h2>
+		<button class="button button-clear button-primary" ng-click="modal.hide()">Cancelar</button>
+	</ion-header-bar>
+
+	<ion-content class="padding">
+		<div>
+			<label class="item item-input">
+				<input type="text" ng-model="novo.tweetText" size="30" placeholder="O que está acontecendo?">
+			</label>
+			<button class="button button-full button-positive" ng-click="addTwitter(novo)">Twittar</button>
+		</div>
+	</ion-content>
+</ion-modal-view>
